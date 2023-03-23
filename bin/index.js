@@ -145,6 +145,41 @@ const checkIfGoConfigFileExists = () => {
   });
 };
 
+// HANDLE ARGUMENTS FUNCTION
+const handleArgs = async () => {
+  switch (args[0]) {
+    case "init":
+      await checkIfAnyOftheFilesExist();
+      console.log(
+        "Created files successfully now run either `npm start` to start the development server"
+      );
+      break;
+    case "start":
+      run("webpack && webpack serve");
+      break;
+    case "serve":
+      run(
+        "cross-env MODE=production webpack && cross-env MODE=production webpack serve"
+      );
+      break;
+    case "build":
+      run("cross-env MODE=production webpack");
+      break;
+    default:
+      console.error(
+        `Arg '${args[0]}' is not supported, supported arguments are:`,
+        `\n 'init': To initialize the project template.
+      \n 'start': To build and start the development server.
+      \n 'serve': To build and start the production server.
+      \n 'build': To build the production project.`
+      );
+      throw new Error(
+        "Please specify an argument either 'start', 'serve' or 'build' "
+      );
+      break;
+  }
+};
+
 // VARIABLES
 const args = yargs.argv._;
 
@@ -157,32 +192,4 @@ if (!Array.isArray(args) || args?.length < 1) {
 
 checkIfGoConfigFileExists();
 
-// HANDLE ARGUMENTS FUNCTION
-switch (args[0]) {
-  case "init":
-    await checkIfAnyOftheFilesExist();
-    break;
-  case "start":
-    run("webpack && webpack serve");
-    break;
-  case "serve":
-    run(
-      "cross-env MODE=production webpack && cross-env MODE=production webpack serve"
-    );
-    break;
-  case "build":
-    run("cross-env MODE=production webpack");
-    break;
-  default:
-    console.error(
-      `Arg '${args[0]}' is not supported, supported arguments are:`,
-      `\n 'init': To initialize the project template.
-      \n 'start': To build and start the development server.
-      \n 'serve': To build and start the production server.
-      \n 'build': To build the production project.`
-    );
-    throw new Error(
-      "Please specify an argument either 'start', 'serve' or 'build' "
-    );
-    break;
-}
+handleArgs();
