@@ -24,7 +24,6 @@ const writeFilesToProjectFolder = async () => {
   const filePath = `node_modules\\@go-pack\\gopack\\gopack-template\\`;
 
   // READ FILES FROM GOPACK-TEMPLATE FOLDER
-  const packgeJson = await readFile(path.resolve(filePath, "package.json"));
   const webpackConfig = await readFile(
     path.resolve(filePath, "webpack.config.js")
   );
@@ -36,13 +35,39 @@ const writeFilesToProjectFolder = async () => {
     path.resolve(filePath, ".browserslistrc")
   );
 
+  // READ PACKAGE.JSON FILES IN PROJECT FOLDER (IF ANY) AND GOPACK-TEMPLATE
+  const newPackgeJsonBuffer = await readFile(
+    path.resolve(filePath, "package.json")
+  );
+  const oldPackgeJsonBuffer = await readFile("package.json").catch((e) => "{}");
+
+  const oldPackageJson = JSON.parse(
+    oldPackgeJsonBuffer?.toString("utf-8") || "{}"
+  );
+  const newPackageJson = JSON.parse(
+    newPackgeJsonBuffer?.toString("utf-8") || "{}"
+  );
+
+  // COMBINE PACKAGE.JSON FILES IN PROJECT FOLDER (IF ANY) AND GOPACK-TEMPLATE
+  const packageJson = {
+    ...oldPackageJson,
+    scripts: {
+      ...(oldPackageJson?.scripts || {}),
+      ...newPackageJson?.scripts,
+    },
+    devDependencies: {
+      ...(oldPackageJson?.devDependencies || {}),
+      ...newPackageJson?.devDependencies,
+    },
+  };
+
   console.log("CREATING PACKAGE.JSON FILE");
   console.log("CREATING WEBPACK.CONFIG.JS FILE");
   console.log("CREATING POSTCSS.CONFIG.JS FILE");
   console.log("CREATING .BROWSERSLISTRC FILE");
 
   // WRITE FILES FROM GOPACK-TEMPLATE FOLDER INTO PROJECT FOLDER
-  await writeFile("package.json", packgeJson).catch((e) => {
+  await writeFile("package.json", JSON.stringify(packageJson)).catch((e) => {
     console.log(`There was an error creating package.json file`);
     throw new Error(e);
   });
