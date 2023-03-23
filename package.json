@@ -1,0 +1,14 @@
+{
+  "name": "gopack",
+  "version": "2.0.1",
+  "description": "This is a demo for a webpack compiler i'm building",
+  "main": "bin/index.js",
+  "author": "Prince C. Onukwili",
+  "license": "MIT",
+  "bin": {
+    "gopack": "./bin/index.js"
+  },
+  "dependencies": {
+    "yargs": "^17.7.1"
+  }
+}
