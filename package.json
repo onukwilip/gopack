@@ -1,6 +1,6 @@
 {
   "name": "@go-pack/gopack",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "description": "This is a demo for a webpack compiler i'm building",
   "main": "bin/index.js",
   "author": "Prince C. Onukwili",
