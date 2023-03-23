@@ -1,6 +1,6 @@
 {
-  "name": "gopack",
-  "version": "2.0.1",
+  "name": "@go-pack/gopack",
+  "version": "2.2.0",
   "description": "This is a demo for a webpack compiler i'm building",
   "main": "bin/index.js",
   "author": "Prince C. Onukwili",
@@ -9,6 +9,7 @@
     "gopack": "./bin/index.js"
   },
   "dependencies": {
+    "inquirer": "^8.2.5",
     "yargs": "^17.7.1"
   }
 }
