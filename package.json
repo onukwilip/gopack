@@ -1,7 +1,7 @@
 {
   "name": "@go-pack/gopack",
-  "version": "2.2.6",
-  "description": "This is a demo for a webpack compiler i'm building",
+  "version": "2.2.7",
+  "description": "This is a webpack compiler developed for bundling javascript projects into static files",
   "main": "bin/index.js",
   "author": "Prince C. Onukwili",
   "license": "MIT",
