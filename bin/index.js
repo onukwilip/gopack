@@ -5,6 +5,7 @@ const { execSync } = require("child_process");
 const { readFileSync } = require("fs");
 const yargs = require("yargs");
 const inquirer = require("inquirer");
+const { readFile, writeFile } = require("fs/promises");
 
 // FUNCTIONS
 const run = (command, options) => {
