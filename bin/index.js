@@ -115,7 +115,8 @@ const checkIfAnyOftheFilesExist = async () => {
     const answers = await prompt([
       {
         name: "overwriteFiles",
-        type: "Should the existing files be overwritten?",
+        message: "Should the existing files be overwritten?",
+        type: "confirm",
         default: false,
       },
     ]);
