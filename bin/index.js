@@ -6,6 +6,7 @@ const { readFileSync } = require("fs");
 const yargs = require("yargs");
 const inquirer = require("inquirer");
 const { readFile, writeFile } = require("fs/promises");
+const path = require("path");
 
 // FUNCTIONS
 const run = (command, options) => {
