@@ -59,15 +59,15 @@ It comprises of key value pairs that enables flexibility in one's project. Which
 -  [pages][pages]
 -  [assetsFolder][assetsFolder]
 
-[generateCSSFiles]: #generateCSSFiles
+[generateCSSFiles]: #generatecssfiles
 [devtool]: #devtool
-[useCoreJs]: #useCoreJs
+[useCoreJs]: #usecorejs
 [entry]: #entry
-[outputFilenameFormat]: #outputFilenameFormat
-[outputFilename]: #outputFilename
-[outputFolder]: #outputFolder
+[outputFilenameFormat]: #outputfilenameformat
+[outputFilename]: #outputfilename
+[outputFolder]: #outputfolder
 [pages]: #pages
-[assetsFolder]: #assetsFolder
+[assetsFolder]: #assetsfolder
 
 #### generateCSSFiles
 This accepts a boolean `true` or `false`. It indicates if webpack should inject CSS styles into the style tags `<style></style>` of every HTML page or if it should generate CSS files and them to various HTML pages.
@@ -75,3 +75,60 @@ This accepts a boolean `true` or `false`. It indicates if webpack should inject 
 #### devtool
 This accepts the same parameters the webpack devtool does. It must be the same parameter that would be inserted into the webpack `devtool` key, unless webpack will throw an error upon build.
 The most common used options are either `false` which is a `boolean` or `source-map` which is a `string`. If the `source-map` is inserted, it generates javascript and CSS map files which will be used to trace code using the browser's `devtool`. The `source-map` option is best used for `development` mode, while the `false` option is best used for `production` mode.
+
+#### useCoreJs
+This accepts a boolean. It signifies if `babel.config.js` should generate code to support older browser versions when bundling using the `core-js` npm package. It is `false` by default.
+
+**NB: This feature generates a lot of code for backwards compatibility, which will end up making your bundled javascript code large. use at your own risk**
+
+#### entry
+This accepts either a `string` or an `object`. It is indicates where webpack should start building our files from. The default value is `./src/index.js`. To specify multiple entrypoint, you create an object with key value pairs. the key being the `chunk` and the value being the *path to the file*. E.g.
+
+```javascript
+entry: {
+    chunk: 'path/to/file.js'
+}
+```
+
+### outputFilenameFormat
+This is the format in which webpack should name our bundled files - `chunks`. It is used if the `entry` parameter is an `object`. It accepts a string. It is written in this format `[name].bundle.js`. The `[name]` block is a variable which signifies the name each generated file `chunk`. The `bundle` extension is optional, but the `js` extension is compulsory. Therefore, if you specify the entry file as:
+```javascript
+entry: {
+    index: './src/index.js'
+}
+```
+The output will be `index.bundle.js`
+
+#### outputFilename
+This is the name you want to give your bundled javascript file. This is used if the `entry` parameter is a `string` or not specified. This key accepts a `string`, which must end with the `.js` extension. E.g. `index.js`
+
+#### outputFolder
+This specifies the folder where all the webpack generated files should be located. It accepts a `string`. E.g. `public`
+
+#### pages
+This is used if you have more than one HTML file which you want to be bundled alongside other files. It accepts an `array` of `objects`. E.g.
+```javascript
+public: [
+    {
+        template: path.resolve(__dirname, "src/index.html"),
+        filename: "index.html",
+    }
+]
+```
+The template key signifies the path to the HTML document, the filename signifies the name it should give the generated HTML document during build.
+
+Each object also accepts a parameter called `chunk`, which is an array of generated JavaScript/CSS file links to be inserted into the HTML document. The items passed as values to the `chunk` array must be same as the keys passed into the `entry` object. E.g
+```javascript
+entry: {
+    index: './src/index.js',
+    about: './src/about.js',
+    contact: './src/contact.js',
+},
+public: [
+    {
+        template: path.resolve(__dirname, "src/about.html"),
+        chunk:["index","about"],
+        filename: "about.html",
+    }
+]
+```
