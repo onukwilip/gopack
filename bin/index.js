@@ -8,6 +8,10 @@ const inquirer = require("inquirer");
 const { readFile, writeFile } = require("fs/promises");
 const path = require("path");
 
+// VARIABLES
+const args = yargs.argv._;
+const y = yargs.argv?.y;
+
 // FUNCTIONS
 const run = (command, options) => {
   try {
@@ -33,6 +37,9 @@ const writeFilesToProjectFolder = async () => {
   );
   const browserslistrc = await readFile(
     path.resolve(filePath, ".browserslistrc")
+  );
+  const gopackConfig = await readFile(
+    path.resolve(filePath, "gopack.config.js")
   );
 
   // READ PACKAGE.JSON FILES IN PROJECT FOLDER (IF ANY) AND GOPACK-TEMPLATE
@@ -65,6 +72,7 @@ const writeFilesToProjectFolder = async () => {
   console.log("CREATING WEBPACK.CONFIG.JS FILE");
   console.log("CREATING POSTCSS.CONFIG.JS FILE");
   console.log("CREATING .BROWSERSLISTRC FILE");
+  console.log("CREATING GOPACK.CONFIG.JS FILE");
 
   // WRITE FILES FROM GOPACK-TEMPLATE FOLDER INTO PROJECT FOLDER
   await writeFile("package.json", JSON.stringify(packageJson)).catch((e) => {
@@ -87,16 +95,24 @@ const writeFilesToProjectFolder = async () => {
     console.log(`There was an error creating .browserslistrc file`);
     throw new Error(e);
   });
+  await writeFile("gopack.config.js", gopackConfig).catch((e) => {
+    console.log(`There was an error creating gopack.config.js file`);
+    throw new Error(e);
+  });
 
   console.log("CREATED PACKAGE.JSON FILE SUCCESSFULLY");
   console.log("CREATED WEBPACK.CONFIG.JS FILE SUCCESSFULLY");
   console.log("CREATED POSTCSS.CONFIG.JS FILE SUCCESSFULLY");
   console.log("CREATED .BROWSERSLISTRC FILE SUCCESSFULLY");
+  console.log("CREATED GOPACK.CONFIG.JS FILE SUCCESSFULLY");
 };
 
 // CHECK IF FILES TO BE CREATED ALREADY EXISTS INSIDE PROJECT FOLDER
 const checkIfAnyOftheFilesExist = async () => {
   const packgeJson = await readFile(path.resolve("package.json")).catch(
+    (e) => undefined
+  );
+  const gopackConfig = await readFile(path.resolve("gopack.config.js")).catch(
     (e) => undefined
   );
   const webpackConfig = await readFile(path.resolve("webpack.config.js")).catch(
@@ -112,13 +128,15 @@ const checkIfAnyOftheFilesExist = async () => {
     (e) => undefined
   );
 
-  // IF ANY FILE EXISTS
+  // IF ANY FILE EXISTS AND THE YES FLAG IS FALSE
   if (
-    packgeJson ||
-    webpackConfig ||
-    babelConfig ||
-    browserslistrc ||
-    postcssConfig
+    (packgeJson ||
+      webpackConfig ||
+      babelConfig ||
+      browserslistrc ||
+      postcssConfig ||
+      gopackConfig) &&
+    !y
   ) {
     const arr = [];
     arr.push(
@@ -126,7 +144,8 @@ const checkIfAnyOftheFilesExist = async () => {
       ["webpack.config.js", webpackConfig],
       ["babel.config.js", babelConfig],
       [".browserslistrc", browserslistrc],
-      ["postcss.config.js", postcssConfig]
+      ["postcss.config.js", postcssConfig],
+      ["gopack.config.js", gopackConfig]
     );
     console.log(
       "These files already exists, they will be overwritten \n",
@@ -156,8 +175,28 @@ const checkIfAnyOftheFilesExist = async () => {
     }
   }
 
-  // IF NO FILE EXISTS WRITE TO THE PROJECT FOLDER
+  // IF NO FILE EXISTS AND YES FLAG IS TRUE, WRITE TO THE PROJECT FOLDER
   await writeFilesToProjectFolder();
+};
+
+const installNodePackages = async () => {
+  if (y) {
+    console.log("Running `npm install -f`");
+    return run("npm install -f");
+  }
+
+  const prompt = inquirer.createPromptModule();
+  const answers = await prompt({
+    type: "confirm",
+    message: "Should the program install npm packages",
+    default: true,
+    name: "installNpm",
+  });
+
+  if (answers?.installNpm) {
+    console.log("Running `npm install -f`");
+    return run("npm install -f");
+  }
 };
 
 // CHECK IF GO.CONFIG.JS EXISTS IN PROJECT FOLDER
@@ -178,19 +217,26 @@ const handleArgs = async () => {
   switch (args[0]) {
     case "init":
       await checkIfAnyOftheFilesExist();
+      await installNodePackages();
       console.log(
         "Created files successfully now run either `npm start` to start the development server"
       );
       break;
     case "start":
+      checkIfGoConfigFileExists();
+
       run("webpack && webpack serve");
       break;
     case "serve":
+      checkIfGoConfigFileExists();
+
       run(
         "cross-env MODE=production webpack && cross-env MODE=production webpack serve"
       );
       break;
     case "build":
+      checkIfGoConfigFileExists();
+
       run("cross-env MODE=production webpack");
       break;
     default:
@@ -202,14 +248,10 @@ const handleArgs = async () => {
       \n 'build': To build the production project.`
       );
       throw new Error(
-        "Please specify an argument either 'start', 'serve' or 'build' "
+        "Please specify an argument either 'init', 'start', 'serve' or 'build' "
       );
-      break;
   }
 };
-
-// VARIABLES
-const args = yargs.argv._;
 
 // CHECK IF ARGUMENT LIST IS EMPTY
 if (!Array.isArray(args) || args?.length < 1) {
@@ -217,7 +259,5 @@ if (!Array.isArray(args) || args?.length < 1) {
     "Please specify an argument either 'init', 'start', 'serve' or 'build' "
   );
 }
-
-checkIfGoConfigFileExists();
 
 handleArgs();
