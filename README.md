@@ -1,4 +1,4 @@
-# <img src="https://drive.google.com/file/d/1Qf8SeEN-GXY3UptOkCIv_IWjYwq2_yTZ/view?usp=share_link" alt="logo" title="logo"> GOPACK
+# <img src="./gopack_logo2.png" alt="logo" title="logo" style="width: 45px;" > GOPACK
 * [Introduction][intro]
 * [Installation][install]
 * [Usage][use]
