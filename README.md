@@ -7,6 +7,10 @@
 * > [Starting the production server][serve]
 * > [Bundling your project][build]
 * > [Using the `gopack.config.js` file][gopackConfig]
+* [Other libraries and frameworks][other]
+* > [Supporting React Js][react]
+* > [Supporting Typescript][typescript]
+* > [Supporting SASS/SCSS][sass]
 
 [intro]: #introduction
 [install]: #installation
@@ -16,9 +20,13 @@
 [serve]: #serve
 [build]: #build
 [gopackConfig]: #gopackconfig
+[other]: #libraries
+[react]: #react
+[typescript]: #typescript
+[sass]: #sass
 
 ## Introduction
-This is a pre written javascript bundler, which was created using webpack. It configures your project to use the already existing webpack loaders and plugins to generate static files.
+GOPack is a pre written javascript bundler, which was created using webpack. It configures your project to use the already existing webpack loaders and plugins to generate static files.
 
 ## Installation
 Inorder to install this package you need to have Node Js running on your system. If you don't have Node Js you can install it from their website [https://nodejs.org](https://nodejs.org). If you have Node Js installed, navigate to your project root folder and run `npm i @go-pack/gopack` in your terminal.
@@ -132,3 +140,17 @@ public: [
     }
 ]
 ```
+#### assetsFolder
+This accepts a string which is the name or path to the folder the bundled images and assets will be stored. E.g. `images` or `path/to/images`.
+
+## Libraries
+GOPack also supports the use of other libraries which are:
+
+### React
+GOPack has built-in support for react. It uses the `@babel/preset-react` library to transpile JSX to javascript. If you need to use React Js in your project you just have to install both the `react` and `react-dom` libraries. Then create a root node in your HTML file where `react` will inject the transpiled JSX code. To learn more about React Js, visit [https://legacy.reactjs.org/docs/getting-started.html](https://legacy.reactjs.org/docs/getting-started.html).
+
+### Typescript
+GOPack has built-in support for typescript. It uses the `ts-loader` loader to handle both `.ts` and `.tsx` files. If you need to use Typescript in your project you just need to install the `typescript` library and create a `tsconfig.json` file in your project's root folder. To learn more about Typescript, visit [https://www.typescriptlang.org/docs/handbook/typescript-from-scratch.html](https://www.typescriptlang.org/docs/handbook/typescript-from-scratch.html).
+
+### SASS
+GOPack has built-in support for SASS. It uses the `sass-loader` loader to handle both `.sass` and `.scss` files. If you need to use SASS in your project you just need to install the `sass` library in your project. To learn more about SASS, visit [https://sass-lang.com/documentation/](https://sass-lang.com/documentation/).
