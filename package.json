@@ -1,10 +1,18 @@
 {
   "name": "@go-pack/gopack",
-  "version": "2.3.1",
+  "version": "2.3.3",
   "description": "This is a webpack compiler developed for bundling javascript projects into static files",
   "main": "bin/index.js",
   "author": "Prince C. Onukwili",
   "license": "MIT",
+  "keywords": [
+    "gopack",
+    "webpack",
+    "babel",
+    "go pack",
+    "go-pack"
+  ],
+  "repository": "https://github.com/onukwilip/gopack",
   "bin": {
     "gopack": "./bin/index.js"
   },

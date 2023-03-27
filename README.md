@@ -154,3 +154,5 @@ GOPack has built-in support for typescript. It uses the `ts-loader` loader to ha
 
 ### SASS
 GOPack has built-in support for SASS. It uses the `sass-loader` loader to handle both `.sass` and `.scss` files. If you need to use SASS in your project you just need to install the `sass` library in your project. To learn more about SASS, visit [https://sass-lang.com/documentation/](https://sass-lang.com/documentation/).
+
+<a href="https://www.producthunt.com/posts/gopack?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-gopack" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=385947&theme=dark" alt="GOPack - Javascript&#0032;bundler&#0032;and&#0032;transpiler&#0032;using&#0032;webpack&#0032;and&#0032;babel | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" /></a>
