@@ -1,4 +1,4 @@
-# <img src="./gopack_logo2.png" alt="logo" title="logo" style="width: 45px;" > GOPACK
+# <img src="./gopack_logo_new.png" alt="logo" title="logo" style="width: 45px;" > GOPACK
 * [Introduction][intro]
 * [Installation][install]
 * [Usage][use]
