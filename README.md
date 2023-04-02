@@ -66,6 +66,7 @@ It comprises of key value pairs that enables flexibility in one's project. Which
 - [outputFolder][outputFolder]
 -  [pages][pages]
 -  [assetsFolder][assetsFolder]
+- [mapPlugins][mapPlugins]
 
 [generateCSSFiles]: #generatecssfiles
 [devtool]: #devtool
@@ -76,6 +77,7 @@ It comprises of key value pairs that enables flexibility in one's project. Which
 [outputFolder]: #outputfolder
 [pages]: #pages
 [assetsFolder]: #assetsfolder
+[mapPlugins]: #mapplugins
 
 #### generateCSSFiles
 This accepts a boolean `true` or `false`. It indicates if webpack should inject CSS styles into the style tags `<style></style>` of every HTML page or if it should generate CSS files and them to various HTML pages.
@@ -143,6 +145,47 @@ public: [
 #### assetsFolder
 This accepts a string which is the name or path to the folder the bundled images and assets will be stored. E.g. `images` or `path/to/images`.
 
+#### mapPlugins
+This accepts an `object`. The value of this is passed to the `webpack.ProvidePlugin()` class. This automatically load modules instead of having to **import** or **require** them everywhere in your project.
+
+Here is an example of it's possible values:
+
+```javascript
+{
+    identifier: 'module'
+    // OR
+    identifier: path.resolve(path.join(__dirname, 'path/to/module.js'))
+}
+```
+The identifier is a user-defined value/key, while the module is either the name of a library in the `node_modules` folder or path to a javascript/typescript file. The **module** is automatically loaded and the **identifier** is filled with the exports of the loaded module (or property in order to support named exports).
+
+Common usages of this option are: 
+
+- [jQuery][jQuery]
+
+[jQuery]: #jquery
+
+##### jQuery
+
+To automatically load jQuery we can point both variables it exposes to the corresponding node module:
+
+```js
+{
+  $: 'jquery',
+  jQuery: 'jquery',
+}
+```
+
+Then in any of our source code:
+
+```js
+// in a module
+$('#item'); // <= works
+jQuery('#item'); // <= also works
+// $ is automatically set to the exports of module "jquery"
+
+```
+
 ## Libraries
 GOPack also supports the use of other libraries which are:
 
@@ -154,5 +197,29 @@ GOPack has built-in support for typescript. It uses the `ts-loader` loader to ha
 
 ### SASS
 GOPack has built-in support for SASS. It uses the `sass-loader` loader to handle both `.sass` and `.scss` files. If you need to use SASS in your project you just need to install the `sass` library in your project. To learn more about SASS, visit [https://sass-lang.com/documentation/](https://sass-lang.com/documentation/).
+
+**N.B: If you need to add any configuration to webpack which is not present in the `gopack.config.js`, add it to the `module.exports` object in the `webpack.config.js` or better still to the variable belonging to that configuration. E.g.**
+```js
+//OUTPUT
+const output = {
+  filename: gopackConfig?.entry
+    ? gopackConfig?.outputFilenameFormat || "[name].bundle.js"
+    : gopackConfig?.outputFilename || "bundle.js",
+  path: path.resolve(gopackConfig?.outputFolder || "public"),
+  assetModuleFilename: `${
+    gopackConfig?.assetsFolder || "images"
+  }/[hash][ext][query]`,
+  clean: true,
+};
+```
+**The `output` constant belongs to the `output` key in the webpack configuration**
+```js
+module.exports = {
+  ...,
+  output: output,
+  ...
+};
+
+```
 
 <a href="https://www.producthunt.com/posts/gopack?utm_source=badge-featured&utm_medium=badge&utm_souce=badge-gopack" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=385947&theme=dark" alt="GOPack - Javascript&#0032;bundler&#0032;and&#0032;transpiler&#0032;using&#0032;webpack&#0032;and&#0032;babel | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" /></a>
