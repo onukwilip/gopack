@@ -4,6 +4,7 @@ const HTMLWebpackPlugin = require("html-webpack-plugin");
 const webpack = require("webpack");
 const ReactRefreshPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 const gopackConfig = require("./gopack.config");
+const { VueLoaderPlugin } = require("vue-loader");
 
 //MODE
 let mode = "development";
@@ -59,34 +60,47 @@ const devServer = {
 //DEV TOOL
 const devtool = gopackConfig?.devtool || false;
 //EXTENSIONS
-const extensions = [".js", ".ts", ".jsx", ".tsx"];
+const extensions = [".js", ".ts", ".jsx", ".tsx", ".vue"];
 //RESOLVE
 const resolve = {
   extensions: extensions,
+  alias: {
+    vue$: "vue/dist/vue.esm.js",
+  },
 };
 //RULES
 const rules = [
+  // JAVASCRIPT AND REACT COMPATIBILTY/LOADERS
   {
     test: /\.(js|jsx)$/,
     exclude: /node_modules/,
     use: [{ loader: "babel-loader" }],
   },
+  // TYPESCRIPT AND REACT COMPATIBILTY/LOADERS
   {
     test: /\.tsx?$/,
     exclude: /node_modules/,
     use: [{ loader: "babel-loader" }, { loader: "ts-loader" }],
   },
+  // CSS, SCSS, SASS AND STYLES COMPATIBILTY/LOADERS
   {
     test: /\.(sa|sc|c)ss$/,
     use: [classLoader, "css-loader", "postcss-loader", "sass-loader"],
   },
+  // ASSETS AND FILES COMPATIBILTY/LOADERS
   {
     test: /\.(png|jpe?g|svg|pdf)$/,
     type: "asset/resource",
   },
+  // HTML COMPATIBILTY/LOADERS
   {
     test: /\.html?$/,
     use: ["html-loader"],
+  },
+  // VUEJS COMPATIBILTY/LOADERS
+  {
+    test: /\.vue$/,
+    use: ["vue-loader"],
   },
 ];
 //MODULE
@@ -96,6 +110,7 @@ const _module = {
 //PLUGINS
 const plugins = [
   new webpack.ProgressPlugin(),
+  new VueLoaderPlugin(),
   ...miniCssExtractPlugin,
   ...htmlPlugins,
   ...reactRefresh,
