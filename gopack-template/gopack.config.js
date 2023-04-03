@@ -18,5 +18,5 @@ module.exports = {
   //   }
   // ],
   // assetsFolder: "assets",
-  // mapPlugins: {},
+  mapPlugins: {},
 };
