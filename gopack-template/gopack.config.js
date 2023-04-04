@@ -8,6 +8,7 @@ module.exports = {
   //   index: "./src/index.js",
   // },
   // outputFilenameFormat: "[name].chunk.js",
+  // outputImageNameFormat: "[name][ext][query]",
   // outputFilename: "main.js",
   // outputFolder: "public",
   // pages: [
@@ -19,4 +20,5 @@ module.exports = {
   // ],
   // assetsFolder: "assets",
   // mapPlugins: {},
+  // libraries: [],
 };
