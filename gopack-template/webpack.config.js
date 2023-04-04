@@ -71,6 +71,27 @@ const supportedLibraries = {
     extension: ".vue",
     plugin: new VueLoaderPlugin(),
   },
+  // PUG COMPATIBILTY
+  pug: {
+    loader: {
+      test: /\.pug$/,
+      use: ["pug-loader"],
+    },
+  },
+  // HANDLE BARS COMPATIBILTY
+  hbs: {
+    loader: {
+      test: /\.hbs$/,
+      use: [
+        {
+          loader: "handlebars-loader",
+          query: {
+            inlineRequires: `/${gopackConfig?.assetsFolder || "images"}/`,
+          },
+        },
+      ],
+    },
+  },
 };
 // GET A LIST OF PROPERTIES OF ALL SUPPORTED LIBRARIES
 const getSupportedLibrariesProperties = (key) => {

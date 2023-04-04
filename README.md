@@ -13,6 +13,9 @@
   * [Supporting Typescript][typescript]
   * [Supporting jQuery][jquery]
   * [Supporting SASS/SCSS][sass]
+  * [Supporting Ejs][ejs]
+  * [Supporting Pug][pug]
+  * [Supporting Handlebars][handlebars]
 
 [intro]: #introduction
 [install]: #installation
@@ -28,6 +31,9 @@
 [typescript]: #typescript
 [jquery]: #jquery
 [sass]: #sass
+[ejs]: #ejs
+[pug]: #pug
+[handlebars]: #handlebars
 
 ## Introduction
 GOPack is a pre written javascript bundler, which was created using webpack. It configures your project to use the already existing webpack loaders and plugins to generate static files.
@@ -210,6 +216,8 @@ Here are it's possible values to be inserted into the list:
 - react
 - vue
 - typescript
+- pug
+- hbs
 
 Examples are:
 - Let's say you want to support React Js, you specify
@@ -248,6 +256,116 @@ GOPack has built-in support for jQuery. If you need to use jQuery in your projec
 
 ### SASS
 GOPack has built-in support for SASS. It uses the `sass-loader` loader to handle both `.sass` and `.scss` files. If you need to use SASS in your project you just need to install the `sass` library in your project. To learn more about SASS, visit [https://sass-lang.com/documentation/](https://sass-lang.com/documentation/).
+
+### Ejs
+GOPack has built-in support for ejs. It uses the `HTMLWebpackPlugin` library to handle `.ejs` files. There is one problem with using `.ejs` files, the `html-loader` doesn't parse images/files imported in `.ejs` files. Therefore, to use import images you have to do it this way. 
+
+```html
+// WRONG
+<img src="./images/picture.jpg" />
+// CORRECT
+<img src="<%= require("./images/picture.jpg") %>" />
+```
+
+You can also add dynamic variables using the `<%= htmlWebpackPlugin.options.variable_name %>` syntax. Then specify  `variable_name` in the object passed into the `pages` array in `gopack.config.js`. E.g.
+
+In the index.ejs file
+```html
+<head>
+    <title><%= htmlWebpackPlugin.options.variable_name %></title>
+</head>
+```
+Then in the `gopack.config.js`
+```js
+{
+    ...,
+    pages: [
+        {
+            template: path.resolve(__dirname, "src/index.ejs"),
+            filename: "index.html",
+            variable_name: "Index page"
+        }
+    ]
+}
+```
+
+To learn more about ejs, visit [https://ejs.co/#docs](https://ejs.co/#docs).
+
+### Pug
+GOPack has built-in support for pug. It uses the `pug-loader` library to handle `.pug` files. There is one problem with using `.pug` files, just like `.ejs` files the `html-loader` doesn't parse images/files imported in `.pug` files. Therefore, to use import images you have to do it this way. 
+
+```js
+// WRONG
+img (src="./images/picture.jpg")
+// CORRECT
+img (src=require("./images/picture.jpg"))
+```
+
+You can also add dynamic variables by just assigning htmlWebpackPlugin.options.variable_name to an element. Then specify  `variable_name` in the object passed into the `pages` array in `gopack.config.js`. E.g.
+
+In the index.pug file
+```js
+head
+    title = htmlWebpackPlugin.options.variable_name
+```
+Then in the `gopack.config.js`
+```js
+{
+    ...,
+    pages: [
+        {
+            template: path.resolve(__dirname, "src/index.pug"),
+            filename: "index.html",
+            variable_name: "Index page"
+        }
+    ]
+}
+```
+
+To learn more about pug, visit [https://pugjs.org/api/getting-started.html](https://pugjs.org/api/getting-started.html).
+
+### Handlebars
+GOPack has built-in support for handlebars. It uses the `handlebars-loader` library to handle `.hbs` files. There is one problem with using `.hbs` files, just like the other non-html files, the `html-loader` doesn't parse images/files imported in `.hbs` files. But, you don't need to do any extra configuration because GOPack has added the object below in the `rules` array for `.hbs` files. 
+
+```js
+    {
+      test: /\.hbs$/,
+      use: [
+        {
+          loader: "handlebars-loader",
+          // CODE RESPONSIBILE FOR PARSING LINKS TO IMAGES
+          query: {
+            inlineRequires: `/${gopackConfig?.assetsFolder || "images"}/`,
+          },
+        },
+      ],
+    }
+```
+
+You can also add dynamic variables using the `{{ htmlWebpackPlugin.options.variable_name }}` syntax. Then specify  `variable_name` in the object passed into the `pages` array in `gopack.config.js`. E.g.
+
+In the index.hbs file
+```html
+<head>
+    <title>{{ htmlWebpackPlugin.options.variable_name }}</title>
+</head>
+```
+Then in the `gopack.config.js`
+```js
+{
+    ...,
+    pages: [
+        {
+            template: path.resolve(__dirname, "src/index.hbs"),
+            filename: "index.html",
+            variable_name: "Index page"
+        }
+    ]
+}
+```
+
+To learn more about handlebars, visit [https://handlebarsjs.com/guide/](https://handlebarsjs.com/guide/).
+
 
 # General
 
