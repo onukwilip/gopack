@@ -1,16 +1,18 @@
-# <img src="./gopack_logo_new.png" alt="logo" title="logo" style="width: 45px;" > GOPACK
+# <img src="./gopack_logo_new.png" alt="logo" title="logo" width="45px" style="width: 45px;" > GOPACK
 * [Introduction][intro]
 * [Installation][install]
 * [Usage][use]
-* > [Initialization][init]
-* > [Starting the development server][start]
-* > [Starting the production server][serve]
-* > [Bundling your project][build]
-* > [Using the `gopack.config.js` file][gopackConfig]
+  * [Initialization][init]
+  * [Starting the development server][start]
+  * [Starting the production server][serve]
+  * [Bundling your project][build]
+  * [Using the `gopack.config.js` file][gopackConfig]
 * [Other libraries and frameworks][other]
-* > [Supporting React Js][react]
-* > [Supporting Typescript][typescript]
-* > [Supporting SASS/SCSS][sass]
+  * [Supporting React Js][react]
+  * [Supporting Vue Js][vue]
+  * [Supporting Typescript][typescript]
+  * [Supporting jQuery][jquery]
+  * [Supporting SASS/SCSS][sass]
 
 [intro]: #introduction
 [install]: #installation
@@ -22,7 +24,9 @@
 [gopackConfig]: #gopackconfig
 [other]: #libraries
 [react]: #react
+[vue]: #vue
 [typescript]: #typescript
+[jquery]: #jquery
 [sass]: #sass
 
 ## Introduction
@@ -62,22 +66,26 @@ It comprises of key value pairs that enables flexibility in one's project. Which
 -  [useCoreJs][useCoreJs]
 -  [entry][entry]
 - [outputFilenameFormat][outputFilenameFormat] 
+- [outputImageNameFormat][outputImageNameFormat]
 - [outputFilename][outputFilename]
 - [outputFolder][outputFolder]
 -  [pages][pages]
 -  [assetsFolder][assetsFolder]
 - [mapPlugins][mapPlugins]
+- [libraries][libraries]
 
 [generateCSSFiles]: #generatecssfiles
 [devtool]: #devtool
 [useCoreJs]: #usecorejs
 [entry]: #entry
 [outputFilenameFormat]: #outputfilenameformat
+[outputImageNameFormat]: #outputImageNameFormat
 [outputFilename]: #outputfilename
 [outputFolder]: #outputfolder
 [pages]: #pages
 [assetsFolder]: #assetsfolder
 [mapPlugins]: #mapplugins
+[libraries]: #libraries
 
 #### generateCSSFiles
 This accepts a boolean `true` or `false`. It indicates if webpack should inject CSS styles into the style tags `<style></style>` of every HTML page or if it should generate CSS files and them to various HTML pages.
@@ -102,6 +110,15 @@ entry: {
 
 ### outputFilenameFormat
 This is the format in which webpack should name our bundled files - `chunks`. It is used if the `entry` parameter is an `object`. It accepts a string. It is written in this format `[name].bundle.js`. The `[name]` block is a variable which signifies the name each generated file `chunk`. The `bundle` extension is optional, but the `js` extension is compulsory. Therefore, if you specify the entry file as:
+```javascript
+entry: {
+    index: './src/index.js'
+}
+```
+The output will be `index.bundle.js`
+
+### outputImageNameFormat
+This is the format in which webpack should name our bundled assets/images. It accepts a string. It is written in this format `[name][hash][ext][query]`. The `[name]` block is a variable which signifies the name each generated file/image. The `[hash]` block is the unique hash webpack generates for each file. The `[ext]` block is the file extension. The `[query]` block is optional. Therefore, if you specify the entry file as:
 ```javascript
 entry: {
     index: './src/index.js'
@@ -186,19 +203,55 @@ jQuery('#item'); // <= also works
 
 ```
 
+#### libraries
+This accepts an `array` of `string`. It specifies which libraries webpack should support when bundling your project. 
+
+Here are it's possible values to be inserted into the list:
+- react
+- vue
+- typescript
+
+Examples are:
+- Let's say you want to support React Js, you specify
+```js
+  {
+    ...,
+    libraries: ["react"]
+  }
+```
+- If you want to support multiple libraries e.g. React Js, Typescript you specify:
+```js
+  {
+    ...,
+    libraries: ["react", "typescript"]
+  }
+```
+
+**N.B: The values are case-sensitive so make sure you use exactly what's specified in the list of possible values**
+
 ## Libraries
 GOPack also supports the use of other libraries which are:
 
 ### React
 GOPack has built-in support for react. It uses the `@babel/preset-react` library to transpile JSX to javascript. If you need to use React Js in your project you just have to install both the `react` and `react-dom` libraries. Then create a root node in your HTML file where `react` will inject the transpiled JSX code. To learn more about React Js, visit [https://legacy.reactjs.org/docs/getting-started.html](https://legacy.reactjs.org/docs/getting-started.html).
 
+### Vue
+GOPack has built-in support for vue. It uses `vue-loader`, `VueLoaderPlugin`, `vue-style-loader`, `vue-template-compiler` to handle `.vue` files. If you need to use Vue Js in your project you just have to install both the `vue` library. Then create one or multiple root nodes in your HTML file where `vue` will inject the transpiled Vue Js code. To learn more about Vue Js, visit [https://vuejs.org/guide/introduction.html](https://vuejs.org/guide/introduction.html).
+
+**N.B: To make use of Vue Js, make sure you have at least 1 `.vue` file in your project folder, unless webpack will throw an error**
+
 ### Typescript
 GOPack has built-in support for typescript. It uses the `ts-loader` loader to handle both `.ts` and `.tsx` files. If you need to use Typescript in your project you just need to install the `typescript` library and create a `tsconfig.json` file in your project's root folder. To learn more about Typescript, visit [https://www.typescriptlang.org/docs/handbook/typescript-from-scratch.html](https://www.typescriptlang.org/docs/handbook/typescript-from-scratch.html).
+
+### JQuery
+GOPack has built-in support for jQuery. If you need to use jQuery in your project you just need to install the `jQuery` library in your project. To learn more about jQuery, visit [https://api.jquery.com/](https://api.jquery.com/).
 
 ### SASS
 GOPack has built-in support for SASS. It uses the `sass-loader` loader to handle both `.sass` and `.scss` files. If you need to use SASS in your project you just need to install the `sass` library in your project. To learn more about SASS, visit [https://sass-lang.com/documentation/](https://sass-lang.com/documentation/).
 
-**N.B: If you need to add any configuration to webpack which is not present in the `gopack.config.js`, add it to the `module.exports` object in the `webpack.config.js` or better still to the variable belonging to that configuration. E.g.**
+# General
+
+If you need to add any configuration to webpack which is not present in the `gopack.config.js`, add it to the `module.exports` object in the `webpack.config.js` or better still to the variable belonging to that configuration. E.g.
 ```js
 //OUTPUT
 const output = {

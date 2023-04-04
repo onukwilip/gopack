@@ -37,6 +37,70 @@ if (process.env.MODE === "production") {
   reactRefresh = [];
 }
 
+// VALIDATE LIBRARIES
+
+// FUNCTION TO CHECK IF A LIBRARY EXISTS
+const validateLibrary = (string) => gopackConfig?.libraries?.includes(string);
+// PROPERTIES OF ALL SUPPORTED LIBRARIES
+const supportedLibraries = {
+  // JAVASCRIPT AND REACT COMPATIBILTY
+  react: {
+    loader: {
+      test: /\.(jsx)$/,
+      exclude: /node_modules/,
+      use: [{ loader: "babel-loader" }],
+    },
+    extension: ".jsx",
+    plugin: reactRefresh[0],
+  },
+  // TYPESCRIPT AND REACT COMPATIBILTY
+  typescript: {
+    loader: {
+      test: /\.tsx?$/,
+      exclude: /node_modules/,
+      use: [{ loader: "babel-loader" }, { loader: "ts-loader" }],
+    },
+    extension: [".ts", ".tsx"],
+  },
+  // VUEJS COMPATIBILTY
+  vue: {
+    loader: {
+      test: /\.vue$/,
+      use: ["vue-loader"],
+    },
+    extension: ".vue",
+    plugin: new VueLoaderPlugin(),
+  },
+};
+// GET A LIST OF PROPERTIES OF ALL SUPPORTED LIBRARIES
+const getSupportedLibrariesProperties = (key) => {
+  if (!gopackConfig?.libraries) return [];
+
+  const properties = [];
+  for (const library of gopackConfig?.libraries) {
+    if (!supportedLibraries[library]) continue;
+    if (!supportedLibraries[library][key]) continue;
+    properties.push(supportedLibraries[library][key]);
+  }
+
+  return properties;
+};
+// PARSE ARRAY OF EXTENSIONS RETURNED BY THE `getSupportedLibrariesProperties` FUNCTION
+const parseSupportedExtensionsArray = () => {
+  const extensions = [...getSupportedLibrariesProperties("extension")];
+  if (!extensions) return [];
+  const parsedExtensions = [];
+
+  for (ext of extensions) {
+    if (Array.isArray(ext)) {
+      ext.forEach((extString) => parsedExtensions.push(extString));
+      continue;
+    }
+    parsedExtensions.push(ext);
+  }
+  return parsedExtensions;
+};
+
 //OPTIONS
 
 //ENTRY
@@ -47,9 +111,9 @@ const output = {
     ? gopackConfig?.outputFilenameFormat || "[name].bundle.js"
     : gopackConfig?.outputFilename || "bundle.js",
   path: path.resolve(gopackConfig?.outputFolder || "public"),
-  assetModuleFilename: `${
-    gopackConfig?.assetsFolder || "images"
-  }/[hash][ext][query]`,
+  assetModuleFilename: `${gopackConfig?.assetsFolder || "images"}/${
+    gopackConfig?.outputImageNameFormat || "[name][ext][query]"
+  }`,
   clean: true,
 };
 //DEV SERVER
@@ -60,27 +124,21 @@ const devServer = {
 //DEV TOOL
 const devtool = gopackConfig?.devtool || false;
 //EXTENSIONS
-const extensions = [".js", ".ts", ".jsx", ".tsx", ".vue"];
+const extensions = [".js", ...parseSupportedExtensionsArray()];
 //RESOLVE
 const resolve = {
   extensions: extensions,
   alias: {
-    vue$: "vue/dist/vue.esm.js",
+    ...(validateLibrary("vue") ? { vue$: "vue/dist/vue.esm.js" } : {}),
   },
 };
 //RULES
 const rules = [
-  // JAVASCRIPT AND REACT COMPATIBILTY/LOADERS
+  // JAVASCRIPT COMPATIBILTY/LOADERS
   {
-    test: /\.(js|jsx)$/,
+    test: /\.(js)$/,
     exclude: /node_modules/,
     use: [{ loader: "babel-loader" }],
-  },
-  // TYPESCRIPT AND REACT COMPATIBILTY/LOADERS
-  {
-    test: /\.tsx?$/,
-    exclude: /node_modules/,
-    use: [{ loader: "babel-loader" }, { loader: "ts-loader" }],
   },
   // CSS, SCSS, SASS AND STYLES COMPATIBILTY/LOADERS
   {
@@ -97,11 +155,8 @@ const rules = [
     test: /\.html?$/,
     use: ["html-loader"],
   },
-  // VUEJS COMPATIBILTY/LOADERS
-  {
-    test: /\.vue$/,
-    use: ["vue-loader"],
-  },
+  // GET ALL SUPPORTED LIBRARY LOADERS
+  ...getSupportedLibrariesProperties("loader"),
 ];
 //MODULE
 const _module = {
@@ -110,11 +165,10 @@ const _module = {
 //PLUGINS
 const plugins = [
   new webpack.ProgressPlugin(),
-  new VueLoaderPlugin(),
   ...miniCssExtractPlugin,
   ...htmlPlugins,
-  ...reactRefresh,
   ...webpackProvidePlugin,
+  ...getSupportedLibrariesProperties("plugin"),
 ];
 
 module.exports = {
