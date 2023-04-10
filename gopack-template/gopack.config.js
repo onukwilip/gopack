@@ -14,9 +14,9 @@ module.exports = {
   // pages: [
   //   {
   //     template: path.resolve(__dirname, "src/index.html"),
-  //     chunk: ["index"],
+  //     //    chunk: ["index"],
   //     filename: "index.html",
-  //   }
+  //   },
   // ],
   // assetsFolder: "assets",
   // mapPlugins: {},

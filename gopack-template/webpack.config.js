@@ -2,25 +2,36 @@ const path = require("path");
 const MiniCSSExtractPlugin = require("mini-css-extract-plugin");
 const HTMLWebpackPlugin = require("html-webpack-plugin");
 const webpack = require("webpack");
-const ReactRefreshPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
 const gopackConfig = require("./gopack.config");
-const { VueLoaderPlugin } = require("vue-loader");
+
+// FUNCTION TO CHECK IF A LIBRARY EXISTS
+const validateLibrary = (string) => gopackConfig?.libraries?.includes(string);
+
+// OPTIONAL LIBRARIES IMPORTS
+const librariesRequires = {
+  react: {
+    ReactRefreshPlugin: validateLibrary("vue")
+      ? require("@pmmmwh/react-refresh-webpack-plugin")
+      : undefined,
+  },
+  vue: {
+    vueLoader: validateLibrary("vue") ? require("vue-loader") : undefined,
+  },
+};
 
 //MODE
 let mode = "development";
 // REACT REFRESH
-let reactRefresh = [new ReactRefreshPlugin()];
+let reactRefresh = librariesRequires.react.ReactRefreshPlugin
+  ? [new librariesRequires.react.ReactRefreshPlugin()]
+  : [];
 let miniCssExtractPlugin = [];
 let classLoader = "style-loader";
 // HTML PLUGINS
 const htmlPlugins =
   typeof gopackConfig?.pages === "object"
     ? gopackConfig?.pages?.map((page) => new HTMLWebpackPlugin(page))
-    : [
-        new HTMLWebpackPlugin({
-          template: path.resolve("./src/index.html"),
-        }),
-      ];
+    : [];
 // WEBPACK.PROVIDEPLUGIN
 const webpackProvidePlugin = gopackConfig?.mapPlugins
   ? [webpack.ProvidePlugin(gopackConfig?.mapPlugins)]
@@ -39,8 +50,6 @@ if (process.env.MODE === "production") {
 
 // VALIDATE LIBRARIES
 
-// FUNCTION TO CHECK IF A LIBRARY EXISTS
-const validateLibrary = (string) => gopackConfig?.libraries?.includes(string);
 // PROPERTIES OF ALL SUPPORTED LIBRARIES
 const supportedLibraries = {
   // JAVASCRIPT AND REACT COMPATIBILTY
@@ -69,7 +78,9 @@ const supportedLibraries = {
       use: ["vue-loader"],
     },
     extension: ".vue",
-    plugin: new VueLoaderPlugin(),
+    plugin: librariesRequires.vue.vueLoader
+      ? new librariesRequires.vue.vueLoader.VueLoaderPlugin()
+      : undefined,
   },
   // PUG COMPATIBILTY
   pug: {
