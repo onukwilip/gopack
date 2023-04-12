@@ -13,7 +13,7 @@
   - [Supporting Vue Js][vue]
   - [Supporting Typescript][typescript]
   - [Supporting jQuery][jquery]
-  - [Supporting SASS/SCSS][sass]
+  - [Supporting SASS][sass]
   - [Supporting Ejs][ejs]
   - [Supporting Pug][pug]
   - [Supporting Handlebars][handlebars]
