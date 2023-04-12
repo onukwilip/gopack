@@ -35,7 +35,7 @@
 [ejs]: #ejs
 [pug]: #pug
 [handlebars]: #handlebars
-[//]: #122333444455555/this/shouldn't/be/repeated/in/the/readme/
+[//]: #122333444455555/this/shouldn't/be/repeated/in/the/readme
 
 ## Introduction
 
