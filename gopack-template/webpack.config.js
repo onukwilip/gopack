@@ -10,7 +10,7 @@ const validateLibrary = (string) => gopackConfig?.libraries?.includes(string);
 // OPTIONAL LIBRARIES IMPORTS
 const librariesRequires = {
   react: {
-    ReactRefreshPlugin: validateLibrary("vue")
+    ReactRefreshPlugin: validateLibrary("react")
       ? require("@pmmmwh/react-refresh-webpack-plugin")
       : undefined,
   },
