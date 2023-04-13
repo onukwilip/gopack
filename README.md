@@ -331,7 +331,31 @@ GOPack has built-in support for vue. It uses `vue-loader`, `VueLoaderPlugin`, `v
 
 ### Angular
 
-GOPack has built-in support for angular. It doesn't use any extra loader to handle angular projects. But, it does add one plugin to the webpack `plugins` array which is the `new webpack.ContextReplacementPlugin()`, in order to support angular core and skip all system imports angular does by itself. It also adds one property to the webpack `devServer` object which is the `historyApiFalback` and sets it to `true`, in order to support angular js routing. If you need to use Angular Js in your project you just have to install the necessary angular libraries. For more detailed information on how to use Angular Js, visit [https://docs.angularjs.org/guide](https://docs.angularjs.org/guide).
+GOPack has built-in support for angular. It doesn't use any extra loader to handle angular projects. But, it does add one plugin to the webpack `plugins` array which is the `new webpack.ContextReplacementPlugin()`, in order to support angular core and skip all system imports angular does by itself. It also adds one property to the webpack `devServer` object which is the `historyApiFalback` and sets it to `true`, in order to support angular js routing.
+If you need to use Angular Js in your project you just have to install the necessary angular libraries, and add `angular` to the list of libraries you want to support in `gopackConfig.libraries` array. I.e.
+
+```js
+{
+  ...,
+  libraries: ["angular"]
+}
+```
+
+You can also add an `object` if you want to specify the link to your project's source folder. I.e
+
+```js
+{
+  ...,
+  libraries: [{
+    name: "angular",
+    src:"path/to/your/project's/source/folder"
+  }]
+}
+```
+
+The `src` value is optional, but if provided it will be added to the `new webpack.ContextReplacementPlugin()` plugin as the path to the project's source folder, else the value `./src` will be used instead.
+
+For more detailed information on how to use Angular Js, visit [https://docs.angularjs.org/guide](https://docs.angularjs.org/guide).
 
 ### Typescript
 
