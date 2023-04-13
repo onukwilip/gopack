@@ -505,7 +505,7 @@ To learn more about handlebars, visit [https://handlebarsjs.com/guide/](https://
 
 ## NodeJs
 
-In order to support a Node js environment, you need to set the `target` option in the gopackConfig to `node`. It defaults to `web`. You can add some key value pairs to the `node` option in the gopackConfig file to configure Node Js polyfill. To learn more about the `target` and `node` options visit [https://webpack.js.org/configuration/target/](https://webpack.js.org/configuration/target/) and [https://webpack.js.org/configuration/node/](https://webpack.js.org/configuration/node/) respectively.
+In order to support a Node js environment, you need to set the `target` option in the gopackConfig to `node`. It defaults to `browserslist`. You can add some key value pairs to the `node` option in the gopackConfig file to configure Node Js polyfill. To learn more about the `target` and `node` options visit [https://webpack.js.org/configuration/target/](https://webpack.js.org/configuration/target/) and [https://webpack.js.org/configuration/node/](https://webpack.js.org/configuration/node/) respectively.
 
 # General
 
