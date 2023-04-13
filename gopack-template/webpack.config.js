@@ -218,6 +218,8 @@ const plugins = [
   ...webpackProvidePlugin,
   ...getSupportedLibrariesProperties("plugin"),
 ];
+// TARGET
+const target = "web";
 
 module.exports = {
   mode: mode,
@@ -228,4 +230,5 @@ module.exports = {
   resolve: resolve,
   module: _module,
   plugins: plugins,
+  target: target,
 };

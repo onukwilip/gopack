@@ -18,6 +18,7 @@
   - [Supporting Ejs][ejs]
   - [Supporting Pug][pug]
   - [Supporting Handlebars][handlebars]
+- [Node Js Support][node]
 
 [intro]: #introduction
 [install]: #installation
@@ -37,6 +38,7 @@
 [ejs]: #ejs
 [pug]: #pug
 [handlebars]: #handlebars
+[node]: #nodejs
 [//]: #122333444455555/this/shouldn't/be/repeated/in/the/readme
 
 ## Introduction
@@ -92,6 +94,8 @@ It comprises of key value pairs that enables flexibility in one's project. Which
 - [assetsFolder][assetsfolder]
 - [mapPlugins][mapplugins]
 - [libraries][libraries]
+- [node][node]
+- [target][target]
 
 [generatecssfiles]: #generatecssfiles
 [devtool]: #devtool
@@ -105,6 +109,8 @@ It comprises of key value pairs that enables flexibility in one's project. Which
 [assetsfolder]: #assetsfolder
 [mapplugins]: #mapplugins
 [libraries]: #libraries
+[node]: #node
+[target]: #target
 
 #### generateCSSFiles
 
@@ -315,6 +321,14 @@ Examples are:
 
 **N.B: The values are case-sensitive so make sure you use exactly what's specified in the list of possible values**
 
+#### node
+
+This is passed into the `webpackConfig.node` object. It accepts an `object` as a value. It specifies certain Node Js globals to polyfill. It should be used if you are running on a Node Js environment. To learn more visit [https://webpack.js.org/configuration/node/](https://webpack.js.org/configuration/node/).
+
+#### target
+
+This tells webpack the environment it should target when building your project. It defaults to `browserslist`. It should be set to `node` to support a Node Js environment, it should be set to `web` or `browserslist` to support a web environment. To learn more visit [https://webpack.js.org/configuration/target/](https://webpack.js.org/configuration/target/)
+
 ## Libraries
 
 GOPack also supports the use of other libraries which are:
@@ -488,6 +502,10 @@ Then in the `gopack.config.js`
 ```
 
 To learn more about handlebars, visit [https://handlebarsjs.com/guide/](https://handlebarsjs.com/guide/).
+
+## Node.Js
+
+In order to support a Node js environment, you need to set the `target` option in the gopackConfig to `node`. It defaults to `web`. You can add some key value pairs to the `node` option in the gopackConfig file to configure Node Js polyfill. To learn more about the `target` and `node` options visit [https://webpack.js.org/configuration/target/](https://webpack.js.org/configuration/target/) and [https://webpack.js.org/configuration/node/](https://webpack.js.org/configuration/node/) respectively.
 
 # General
 
