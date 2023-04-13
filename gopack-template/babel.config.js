@@ -1,8 +1,11 @@
 const gopackConfig = require("./gopack.config");
 
 // FUNCTION TO CHECK IF A LIBRARY EXISTS
-const validateLibrary = (string) => gopackConfig?.libraries?.includes(string);
+const validateLibrary = (string) =>
+  gopackConfig?.libraries?.includes(string) ||
+  gopackConfig?.libraries?.find((library) => library?.name === string);
 
+// PROPERTIES OF ALL SUPPORTED LIBRARIES
 const supportedLibraries = {
   // JAVASCRIPT AND REACT COMPATIBILTY
   react: {
@@ -17,9 +20,10 @@ const getSupportedLibrariesProperties = (key) => {
 
   const properties = [];
   for (const library of gopackConfig?.libraries) {
-    if (!supportedLibraries[library]) continue;
-    if (!supportedLibraries[library][key]) continue;
-    properties.push(supportedLibraries[library][key]);
+    const libraryName = library?.name || library;
+    if (!supportedLibraries[libraryName]) continue;
+    if (!supportedLibraries[libraryName][key]) continue;
+    properties.push(supportedLibraries[libraryName][key]);
   }
 
   return properties;

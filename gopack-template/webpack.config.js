@@ -5,7 +5,9 @@ const webpack = require("webpack");
 const gopackConfig = require("./gopack.config");
 
 // FUNCTION TO CHECK IF A LIBRARY EXISTS
-const validateLibrary = (string) => gopackConfig?.libraries?.includes(string);
+const validateLibrary = (string) =>
+  gopackConfig?.libraries?.includes(string) ||
+  gopackConfig?.libraries?.find((library) => library?.name === string);
 
 // OPTIONAL LIBRARIES IMPORTS
 const librariesRequires = {
@@ -86,7 +88,11 @@ const supportedLibraries = {
   angular: {
     plugin: new webpack.ContextReplacementPlugin(
       /angular(\\|\/)core/,
-      path.join(__dirname, "./src"),
+      path.join(
+        __dirname,
+        gopackConfig?.libraries?.find((lib) => lib.name === "angular")?.src ||
+          "./src"
+      ),
       {}
     ),
   },
@@ -118,9 +124,10 @@ const getSupportedLibrariesProperties = (key) => {
 
   const properties = [];
   for (const library of gopackConfig?.libraries) {
-    if (!supportedLibraries[library]) continue;
-    if (!supportedLibraries[library][key]) continue;
-    properties.push(supportedLibraries[library][key]);
+    const libraryName = library?.name || library;
+    if (!supportedLibraries[libraryName]) continue;
+    if (!supportedLibraries[libraryName][key]) continue;
+    properties.push(supportedLibraries[libraryName][key]);
   }
 
   return properties;

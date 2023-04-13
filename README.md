@@ -11,6 +11,7 @@
 - [Other libraries and frameworks][other]
   - [Supporting React Js][react]
   - [Supporting Vue Js][vue]
+  - [Supporting Angular Js][angular]
   - [Supporting Typescript][typescript]
   - [Supporting jQuery][jquery]
   - [Supporting SASS/SCSS][sass]
@@ -29,6 +30,7 @@
 [other]: #libraries
 [react]: #react
 [vue]: #vue
+[angular]: #angular
 [typescript]: #typescript
 [jquery]: #jquery
 [sass]: #sass
@@ -273,12 +275,20 @@ jQuery("#item"); // <= also works
 
 #### libraries
 
-This accepts an `array` of `string`. It specifies which libraries webpack should support when bundling your project.
+This accepts an `array` of `string` or `objects`. It specifies which libraries webpack should support when bundling your project. If you are adding an object to the list, you should do so in this format.
+
+```js
+{
+  name: "name-of-library",
+  ...//other properties specified
+}
+```
 
 Here are it's possible values to be inserted into the list:
 
 - react
 - vue
+- angular **OR** `{name: "angular", src: "path/to/your/source/folder"}`
 - typescript
 - pug
 - hbs
@@ -294,12 +304,12 @@ Examples are:
   }
 ```
 
-- If you want to support multiple libraries e.g. React Js, Typescript you specify:
+- If you want to support multiple libraries e.g. Typescript, Angular you specify:
 
 ```js
   {
     ...,
-    libraries: ["react", "typescript"]
+    libraries: ["typescript", {name: "angular", src: "path/to/your/source/folder"}]
   }
 ```
 
@@ -315,9 +325,13 @@ GOPack has built-in support for react. It uses the `@babel/preset-react` library
 
 ### Vue
 
-GOPack has built-in support for vue. It uses `vue-loader`, `VueLoaderPlugin`, `vue-style-loader`, `vue-template-compiler` to handle `.vue` files. If you need to use Vue Js in your project you just have to install both the `vue` library. Then create one or multiple root nodes in your HTML file where `vue` will inject the transpiled Vue Js code. To learn more about Vue Js, visit [https://vuejs.org/guide/introduction.html](https://vuejs.org/guide/introduction.html).
+GOPack has built-in support for vue. It uses `vue-loader`, `VueLoaderPlugin`, `vue-style-loader`, `vue-template-compiler` to handle `.vue` files. If you need to use Vue Js in your project you just have to install the `vue` library. Then create one or multiple root nodes in your HTML file where `vue` will inject the transpiled Vue Js code. To learn more about Vue Js, visit [https://vuejs.org/guide/introduction.html](https://vuejs.org/guide/introduction.html).
 
 **N.B: To make use of Vue Js, make sure you have at least 1 `.vue` file in your project folder, unless webpack will throw an error**
+
+### Angular
+
+GOPack has built-in support for angular. It doesn't use any extra loader to handle angular projects. But, it does add one plugin to the webpack `plugins` array which is the `new webpack.ContextReplacementPlugin()`, in order to support angular core and skip all system imports angular does by itself. It also adds one property to the webpack `devServer` object which is the `historyApiFalback` and sets it to `true`, in order to support angular js routing. If you need to use Angular Js in your project you just have to install the necessary angular libraries. For more detailed information on how to use Angular Js, visit [https://docs.angularjs.org/guide](https://docs.angularjs.org/guide).
 
 ### Typescript
 
