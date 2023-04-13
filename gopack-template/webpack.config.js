@@ -219,7 +219,9 @@ const plugins = [
   ...getSupportedLibrariesProperties("plugin"),
 ];
 // TARGET
-const target = "web";
+const target = gopackConfig?.target || "browserslist";
+// NODE
+const node = gopackConfig?.node ? { node: gopackConfig.node } : {};
 
 module.exports = {
   mode: mode,
@@ -231,4 +233,5 @@ module.exports = {
   module: _module,
   plugins: plugins,
   target: target,
+  ...node,
 };
