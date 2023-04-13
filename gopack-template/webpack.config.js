@@ -82,6 +82,14 @@ const supportedLibraries = {
       ? new librariesRequires.vue.vueLoader.VueLoaderPlugin()
       : undefined,
   },
+  // ANGULAR COMPATIBILTY
+  angular: {
+    plugin: new webpack.ContextReplacementPlugin(
+      /angular(\\|\/)core/,
+      path.join(__dirname, "./src"),
+      {}
+    ),
+  },
   // PUG COMPATIBILTY
   pug: {
     loader: {
@@ -151,6 +159,7 @@ const output = {
 //DEV SERVER
 const devServer = {
   static: path.resolve("public"),
+  ...(validateLibrary("angular") ? { historyApiFallback: true } : {}),
   hot: true,
 };
 //DEV TOOL
