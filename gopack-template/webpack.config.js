@@ -1,5 +1,6 @@
 const path = require("path");
 const MiniCSSExtractPlugin = require("mini-css-extract-plugin");
+const CopyPlugin = require("copy-webpack-plugin");
 const HTMLWebpackPlugin = require("html-webpack-plugin");
 const webpack = require("webpack");
 const gopackConfig = require("./gopack.config");
@@ -26,6 +27,10 @@ let mode = "development";
 // REACT REFRESH
 let reactRefresh = librariesRequires.react.ReactRefreshPlugin
   ? [new librariesRequires.react.ReactRefreshPlugin()]
+  : [];
+// COPY WEBPACK PLUGIN
+const copyWebpackPlugin = gopackConfig?.copy
+  ? [new CopyPlugin(gopackConfig?.copy)]
   : [];
 let miniCssExtractPlugin = [];
 let classLoader = "style-loader";
@@ -216,6 +221,7 @@ const plugins = [
   ...miniCssExtractPlugin,
   ...htmlPlugins,
   ...webpackProvidePlugin,
+  ...copyWebpackPlugin,
   ...getSupportedLibrariesProperties("plugin"),
 ];
 // TARGET

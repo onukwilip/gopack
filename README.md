@@ -96,6 +96,7 @@ It comprises of key value pairs that enables flexibility in one's project. Which
 - [libraries][libraries]
 - [node][node]
 - [target][target]
+- [copy][copy]
 
 [generatecssfiles]: #generatecssfiles
 [devtool]: #devtool
@@ -111,6 +112,7 @@ It comprises of key value pairs that enables flexibility in one's project. Which
 [libraries]: #libraries
 [node]: #node
 [target]: #target
+[copy]: #copy
 
 #### generateCSSFiles
 
@@ -328,6 +330,50 @@ This is passed into the `webpackConfig.node` object. It accepts an `object` as a
 #### target
 
 This tells webpack the environment it should target when building your project. It defaults to `browserslist`. It should be set to `node` to support a Node Js environment, it should be set to `web` or `browserslist` to support a web environment. To learn more visit [https://webpack.js.org/configuration/target/](https://webpack.js.org/configuration/target/)
+
+#### copy
+
+This specifies individual files or entire directories which already exist, that webpack should copy to the build directory. It's value is being passed to the `new CopyWebpackPlugin()` class.
+It accepts an `object` of keys. I.e
+
+- patterns (Array)
+- options (Object)
+
+The `patterns` property accepts a list of `objects` which properties are:
+
+[`from`, `to`, `context`, `globOptions`, `filter`, `toType`, `force`, `priority`, `transform`, `transformAll`, `noErrorOnMissing`, `info`]. We will only explain the `from` and `to` properties, to learn more visit [https://webpack.js.org/plugins/copy-webpack-plugin](https://webpack.js.org/plugins/copy-webpack-plugin).
+
+- from:
+  This is an object that accepts a `string`, i.e. The path to the file/folder to be copied.
+- to:
+  This is an object that accepts a `string`, i.e. The destination of the copied file or folder.
+
+E.g
+
+```js
+{
+  copy: {
+    patterns: [
+      {
+        from: "path/to/file.js",
+        to: "path/to/destination/file.js",
+      },
+      {
+        from: "path/to/folder",
+        to: "path/to/destination/folder",
+      },
+      {
+        from: path.resolve(__dirname, "folder").replace(/\\/g, "/"),
+        to: path.resolve(__dirname, "folder").replace(/\\/g, "/"),
+      },
+    ];
+  }
+}
+```
+
+> **N.B: Don't use directly `\\` in `from` or `to` option if it is a glob (i.e `path\to\file.ext`) option because on UNIX the backslash is a valid character inside a path component, i.e., it's not a separator. On Windows, the forward slash and the backward slash are both separators. Instead please use `/`.**
+
+To learn more please visit [https://webpack.js.org/plugins/copy-webpack-plugin](https://webpack.js.org/plugins/copy-webpack-plugin).
 
 ## Libraries
 

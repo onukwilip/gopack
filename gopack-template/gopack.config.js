@@ -23,4 +23,5 @@ module.exports = {
   // libraries: [],
   // node: {}
   // target: "web" // Possible values are node, web, etc. Switch to `node` to support a Node Js environment. Visit https://webpack.js.org/configuration/target/ to learn more
+  // copy: {}
 };
